@@ -1,0 +1,17 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="{% static 'examp.css' %}">
+    <title>BMSTU</title>
+</head>
+<body>
+    Hello BMSTU students!
+    Today is {{ data.current_date }}
+<ul>
+    {% block title %}{% endblock %}
+    {% block content %}{% endblock %}
+</ul>
+</body>
+</html>

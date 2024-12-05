@@ -1,0 +1,45 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="rus">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Магазин</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  </head>
+  <body>
+    <div class="space">
+        {{header}}
+        <div class="app_line">
+          <div class="input_back">
+            <input name="fio" type="text" class="input" value="" placeholder="ФИО">
+          </div>
+          <div class="input_back">
+            <input name="latitude" type="text" class="input" value="" placeholder="Широта">
+          </div>
+        </div>
+        <div class="plant_req_container">
+          {% for set in data.plant_req.sets %}
+            {% for item in data.items %}
+              {% if item.id == set.id %}
+                {% include 'plant_req_item.html' with element=item amount=set.amount %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+        <div class="app_line">
+          <div class="input_back">
+            <input name="cost" type="text" class="input" value="" placeholder="Цена" readonly>
+          </div>
+          <div class="input_back">
+            <input name="generation" type="text" class="input" value="" placeholder="Генерация" readonly>
+          </div>
+          <div class="input_back">
+            <input name="saving" type="text" class="input" value="" placeholder="Сбережение" readonly>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

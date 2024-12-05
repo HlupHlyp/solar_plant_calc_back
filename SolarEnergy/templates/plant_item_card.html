@@ -1,0 +1,12 @@
+
+<div class="plant_req">
+    <img src="{{ element.img }}" class="image">
+    <div class="info">
+        <div class="title">{{ element.title }}</div>
+        <div class="short-description">{{ element.short_description }}</div>
+        <div class = "cost" >{{ element.cost }} р.</div>
+    </div>
+    <div class="down">
+        <a href="{% url 'item_url' element.id %}" class="descript-button">ПОДРОБНЕЕ</a>
+    </div>
+</div>

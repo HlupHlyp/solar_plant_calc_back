@@ -1,0 +1,35 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="rus">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Магазин</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  </head>
+  <body>
+
+    <div class="space">
+        {{header}}
+        <div class="top_line">
+          <form action="." method="GET" class="input_back" style="margin-right:2%;">
+            <input name="text" type="text" class="input" value="{{data.searchText}}"><br><br>
+          </form>
+          <div class = "plant_req_button">
+            <a href="/plant_req/1">
+              <div class = "elements_amount">9</div>
+            </a>
+            <img class = "image" src="http://127.0.0.1:9000/solar-energy/card.png">
+          </div>
+        </div>
+        
+        <div class="container">
+            {% for item in data.items %}
+                {% include 'plant_item_card.html' with element=item %}
+            {% endfor %}
+        </div>
+    </div>
+  </body>
+</html>

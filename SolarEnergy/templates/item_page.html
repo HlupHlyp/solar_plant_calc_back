@@ -1,0 +1,30 @@
+{% load static %}
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="rus">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Магазин</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  </head>
+  <body>
+
+    <div class="space">
+        {{header}}
+        <div class = "item_page_container">
+          <img src="{{item.img}}" class = "item_page_half">
+          <div class="item_page_half">
+            <div class="item_page_title">{{item.title}}</div>
+            <div class="item_page_cost">{{item.cost}} р.</div>
+            <div class="item_page_description">
+              <b>Описание </b><br>
+              {{item.long_description}}
+              <div class="item_specification">{{item.specification}}</div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

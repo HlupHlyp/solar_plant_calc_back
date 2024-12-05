@@ -1,0 +1,20 @@
+
+<div class="plant_req">
+    <img src="{{ element.img_link }}" class="image">
+    <div class="info">
+        <div class="title">{{ element.item_name }}</div>
+        <div class="short-description">{{ element.short_description }}</div>
+        <div class = "cost" >{{ element.item_cost }} р.</div>
+    </div>
+    <div class="down">
+        <a href="{% url 'item_url' element.item_id %}" class="descript-button">ПОДРОБНЕЕ</a>
+        <form action="add2plant" method="post" style="margin-top:0;" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="item_id" value="{{element.item_id}}" 
+            style="visibility:hidden;height:0;padding-top:0;padding-bottom:0;border:none;">
+            <input type="text" name="plant_id" value="2" 
+            style="visibility:hidden;height:0;padding-top:0;padding-bottom:0;border:none;">
+            <input type="submit" class="add2plant_button" value="В КОРЗИНУ">
+        </form>
+    </div>
+</div>

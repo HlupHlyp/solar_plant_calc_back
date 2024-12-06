@@ -480,17 +480,41 @@ def logout_user(request):
     return Response(status=status.HTTP_403_FORBIDDEN)
 
 def calculating(plant_id):
-    ratio = 5 + 7*0.7
     saving = 0
     generation = 0
+
     sets = item2plant_model.objects.filter(plant_id = plant_id).values()
+    plant = get_object_or_404(item_model, plant_id=plant_id)
+
+    if plant.latitude is None: return False
+    insolation = avg_insolation(plant.latitude)
+
+    s = 1
+
     for set in sets:
         item_id = set["item_id"]
         item = item_model.objects.get(item_id = item_id)
         if item.item_type == 'battery':
             saving += float(item.item_capacity) * float(item.item_voltage) * set["amount"]
         else:
-            generation += float(item.item_power) * ratio
+            generation += float(item.item_power) / 1000 / s * insolation
     return {"generation":generation, "saving":saving}
 
+def avg_insolation(latitude):
+    N_sum_S_win_insolation = {90: 5434,80: 5432,70: 5542,60: 5962,50: 6419,40: 6754,30: 6930,20: 6922,10: 6729,0: 6344,-10: 5782,-20: 5066,-30: 4211,-40: 3264,-50: 2254,
+                              -60: 1253,-70: 443,-80: 75,-90: 0,}
+    N_win_S_sum_insolation = {90: 0,80: 159,70: 608,60: 1480,50: 2538,40: 3634,30: 4634,20: 5522,10: 6260,0: 6834,-10: 7207,-20: 7379,-30: 7353,-40: 7127,-50: 6731,-60: 6201,
+                              -70: 5708,-80: 5508,-90: 5434,}
+                              
+    bottom_latitude = latitude//10
+    top_latitude = None
+
+    if latitude > 0 and latitude//10: top_latitude = bottom_latitude + 10
+    elif latitude//10 == 0: top_latitude = bottom_latitude
+    else: top_latitude = bottom_latitude - 10
+
+    semester1_insolation = (N_sum_S_win_insolation[bottom_latitude] + N_sum_S_win_insolation[top_latitude])*1000/(2*182*24*3,6)
+    semester2_insolation = (N_win_S_sum_insolation[bottom_latitude] + N_win_S_sum_insolation[top_latitude])*1000/(2*182*24*3,6)
+
+    return (semester1_insolation + semester2_insolation) / 2
         

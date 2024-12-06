@@ -88,8 +88,7 @@ class ItemList(APIView):
         or item_model.objects.filter(long_description__icontains=search_request, item_status = 'active') 
         or item_model.objects.filter(short_description__icontains=search_request, item_status = 'active'))
         serializer = self.serializer_class(items, many=True)
-        if not request.user.is_anonymous:
-            print("!!")
+        if get_user(request) is not None:
             plants = plant_model.objects.filter(creator = get_user(request), plant_status = "draft").values()
         if not plants:
             data = {'items':serializer.data, 'plant_id':None, 'amount':None}

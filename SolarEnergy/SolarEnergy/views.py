@@ -5,7 +5,7 @@ from datetime import date
 items = {'items':[
         {'id':'solar_panel_1',
         'title': 'ПАНЕЛЬ СОЛНЕЧНАЯ 285 ВТ 24 В ПОЛИ', 
-        'img': 'http://127.0.0.1:9000/solar-energy/solar_panel_1.gif',
+        'img': 'http://127.0.0.1:9000/solar-energy/3.gif',
         'short_description':'General Energo\n Мощность 210Вт\n Поликристаллические, Grade A',
         'long_description':'Солнечная панель представляет собой устройство, которое преобразует солнечный свет'
         'в электрическую энергию, используя для этого множество объединённых в общую цепь фотоэлементов.'

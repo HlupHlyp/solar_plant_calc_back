@@ -358,17 +358,23 @@ def plant_forming(request, plant_id, format=None):
 @parser_classes([MultiPartParser])
 def plant_finishing(request, plant_id, format=None):
     plant_status = request.POST.get("plant_status")
+    print("!")
     plant = get_object_or_404(plant_model, plant_id = plant_id)
     if plant_status in ["rejected", "completed"] and plant.plant_status == 'formed':
+        print("!!")
+        if plant_status == "rejected":
+            plant.plant_status = plant_status
+            plant.save()
+            return Response(status=status.HTTP_206_PARTIAL_CONTENT)
         data = calculating(plant_id)
-        plant.plant_status = plant_status
-        if plant_status == "completed":
+        if plant_status == "completed" and data is not None and plant.latitude is not None:
+            plant.plant_status = plant_status
             plant.saving = data["saving"]
             plant.generation = data["generation"]
             plant.finishing_date = datetime.datetime.now()
             plant.moderator = get_user(request)
-        plant.save()
-        return Response(status=status.HTTP_206_PARTIAL_CONTENT)
+            plant.save()
+            return Response(status=status.HTTP_206_PARTIAL_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -484,12 +490,10 @@ def calculating(plant_id):
     generation = 0
 
     sets = item2plant_model.objects.filter(plant_id = plant_id).values()
-    plant = get_object_or_404(item_model, plant_id=plant_id)
+    plant = get_object_or_404(plant_model, plant_id=plant_id)
 
-    if plant.latitude is None: return False
+    if plant.latitude is None: return None
     insolation = avg_insolation(plant.latitude)
-
-    s = 1
 
     for set in sets:
         item_id = set["item_id"]
@@ -497,24 +501,23 @@ def calculating(plant_id):
         if item.item_type == 'battery':
             saving += float(item.item_capacity) * float(item.item_voltage) * set["amount"]
         else:
-            generation += float(item.item_power) / 1000 / s * insolation
+            #Мощность солнечной панели рассчитывается производителем при Инсоляции в 1000 Вт/м2, исходя из этого ищем КПД и домножаем на инсоляцияю, затем на 24 часа
+            generation += float(item.item_power) / 1000 * insolation * 24 * set["amount"]
     return {"generation":generation, "saving":saving}
 
 def avg_insolation(latitude):
-    N_sum_S_win_insolation = {90: 5434,80: 5432,70: 5542,60: 5962,50: 6419,40: 6754,30: 6930,20: 6922,10: 6729,0: 6344,-10: 5782,-20: 5066,-30: 4211,-40: 3264,-50: 2254,
-                              -60: 1253,-70: 443,-80: 75,-90: 0,}
-    N_win_S_sum_insolation = {90: 0,80: 159,70: 608,60: 1480,50: 2538,40: 3634,30: 4634,20: 5522,10: 6260,0: 6834,-10: 7207,-20: 7379,-30: 7353,-40: 7127,-50: 6731,-60: 6201,
-                              -70: 5708,-80: 5508,-90: 5434,}
-                              
-    bottom_latitude = latitude//10
+    insolation = {"90": 5434,"80": 5591,"70":6150,"60": 7442,"50": 8957,"40": 10388,"30": 11564,"20": 12444,"10": 12989,"0": 13178,"-10": 12989,"-20": 12445,"-30": 11564,"-40": 10391,"-50": 8985,
+                              "-60": 7454,"-70": 6151,"-80": 5583,"-90": 5434,}
+                       
+    bottom_latitude = latitude//10*10
     top_latitude = None
 
-    if latitude > 0 and latitude//10: top_latitude = bottom_latitude + 10
-    elif latitude//10 == 0: top_latitude = bottom_latitude
+    if latitude > 0: top_latitude = bottom_latitude + 10
+    elif latitude == 0: top_latitude = bottom_latitude
     else: top_latitude = bottom_latitude - 10
 
-    semester1_insolation = (N_sum_S_win_insolation[bottom_latitude] + N_sum_S_win_insolation[top_latitude])*1000/(2*182*24*3,6)
-    semester2_insolation = (N_win_S_sum_insolation[bottom_latitude] + N_win_S_sum_insolation[top_latitude])*1000/(2*182*24*3,6)
+    #получаем среднюю годовую инсоляцию инсоляцию на широте между top_latitude и bottom_latitude
+    year_insolation = round((insolation[str(bottom_latitude)] + insolation[str(top_latitude)])*1000/(2*365*24*3.6), 2)
 
-    return (semester1_insolation + semester2_insolation) / 2
+    return year_insolation
         

@@ -55,5 +55,6 @@ $n_{i}$ - кол-во аккумуляторов i-ого типа в станц
    https://habr.com/ru/articles/482876/
 5. Ссылка на git pages:
    https://hluphlyp.github.io/solar_plant_calc_front/
+   
 Также было использована множество страница habr.com и stackoverflow.com.
 

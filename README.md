@@ -47,11 +47,12 @@ $n_{i}$ - кол-во аккумуляторов i-ого типа в станц
 ## Использованные ресурсы
 1. Сайт с показателями инсоляции, использованными для сверки расчетов:
    https://andi-grupp.ru/informatsiya/stati/solnechnaya-insolyatsiya-v-gorodakh-rossii/?ysclid=m4e78eeqa9477965670
-2. Репозиторий курса "Разработка интернет приложений":
-   https://github.com/iu5git/Web/
+2. Ссылка на репозиторий фронтэнда:
+   https://github.com/HlupHlyp/solar_plant_calc_front/
 3. Сайт с показателями инсоляции:
    https://bookonlime.ru/lecture/glava-3-solyarnyy-klimat-zemli-prostranstvennye-i-vremennye-izmeneniya-insolyacii
 4. Сайт, с которого была позаимствована информации о расчете мощности солнечной панели:
    https://habr.com/ru/articles/482876/
+5. Ссылка на git pages:
+   https://hluphlyp.github.io/solar_plant_calc_front/
 Также было использована множество страница habr.com и stackoverflow.com.
-
